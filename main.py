@@ -55,7 +55,7 @@ class Problem4Until1(IProblemSolving):
         return count
 
 
-class Problem_4_1_TLBR(IProblemSolving):
+class ProblemExample_4_1_TLBR(IProblemSolving):
     def solve(self, input_data: List[List[Any]]) -> List[int]:
         pos = [1, 1]
         mat_size = input_data[0][0]
@@ -72,6 +72,8 @@ class Problem_4_1_TLBR(IProblemSolving):
         return pos
 
 
+
+
 if __name__ == '__main__':
     problems = [
         ProblemExample1([[[5,8,3], [2,4,5,4,6]]]),
@@ -80,7 +82,7 @@ if __name__ == '__main__':
             [[2, 4], [7, 3, 1, 8], [3, 3, 3, 4]]
         ]),
         Problem4Until1([[25, 5]]),
-        Problem_4_1_TLBR([[[5], ['R', 'R', 'R', 'U', 'D', 'D']]]),
+        ProblemExample_4_1_TLBR([[[5], ['R', 'R', 'R', 'U', 'D', 'D']]]),
     ]
 
     for p in problems:
