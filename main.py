@@ -179,19 +179,79 @@ class Problem_3_GameDevelopment(IProblemSolving):
         return visited_count
 
 
+class Problem_3_DFS_BFS_FrozenBeverage(IProblemSolving):
+    def solve(self, input_data: List[List[Any]]):
+        n = input_data[0][0]
+        m = input_data[0][1]
+        slot = []
+        for idx, row in enumerate(input_data[1:]):
+            slot.append([])
+            for val in row:
+                slot[idx].append(int(val[0]))
+
+        # 왼쪽 위부터 모든 항목을 확인하며 값을 바꿔나감.
+        def fill_empty(r, c):
+            slot[r][c] = 1
+            if r + 1 < len(slot) and slot[r+1][c] == 0:
+                fill_empty(r + 1, c)
+            if c + 1 < len(slot[r]) and slot[r][c+1] == 0:
+                fill_empty(r, c + 1)
+            if r - 1 >= 0 and slot[r-1][c] == 0:
+                fill_empty(r-1, c)
+            if c - 1 >= 0 and slot[r][c-1] == 0:
+                fill_empty(r, c-1)
+
+        ice_count = 0
+        for row_idx, row in enumerate(slot):
+            for col_idx, el in enumerate(row):
+                if el == 0:
+                    fill_empty(row_idx, col_idx)
+                    ice_count += 1
+        return ice_count
+
+
+def code_practice():
+    s = [3,5,7,9,11,13]
+    print(s[1::2])
+    from collections import deque
+    queue = deque()
+    graph = [[0 for _ in range(3)] for _ in range(3)]
+    print(graph)
+
+
+
 if __name__ == '__main__':
     problems = [
-        ProblemExample1([[[5,8,3], [2,4,5,4,6]]]),
-        Problem3NumCardGame([
-            [[3, 3], [3, 1, 2], [4, 1, 4], [2, 2, 2]],
-            [[2, 4], [7, 3, 1, 8], [3, 3, 3, 4]]
-        ]),
-        Problem4Until1([[25, 5]]),
-        ProblemExample_4_1_TLBR([[[5], ['R', 'R', 'R', 'U', 'D', 'D']]]),
-        ProblemExample_4_2_Time([[5]]),
-        Problem_2_RoyalNight([['a1']]),
-        Problem_3_GameDevelopment([[[4,4], [1,1,0], [1,1,1,1], [1,0,0,1], [1,1,0,1], [1,1,1,1]]]),
+        # ProblemExample1([[[5,8,3], [2,4,5,4,6]]]),
+        # Problem3NumCardGame([
+        #     [[3, 3], [3, 1, 2], [4, 1, 4], [2, 2, 2]],
+        #     [[2, 4], [7, 3, 1, 8], [3, 3, 3, 4]]
+        # ]),
+        # Problem4Until1([[25, 5]]),
+        # ProblemExample_4_1_TLBR([[[5], ['R', 'R', 'R', 'U', 'D', 'D']]]),
+        # ProblemExample_4_2_Time([[5]]),
+        # Problem_2_RoyalNight([['a1']]),
+        # Problem_3_GameDevelopment([[[4,4], [1,1,0], [1,1,1,1], [1,0,0,1], [1,1,0,1], [1,1,1,1]]]),
+        Problem_3_DFS_BFS_FrozenBeverage([[[15, 14],
+                                           '00000111100000',
+                                           '11111101111110',
+                                           '11011101101110',
+                                           '11011101100000',
+                                           '11011111111111',
+                                           '11011111111100',
+                                           '11000000011111',
+                                           '01111111111111',
+                                           '00000000011111',
+                                           '01111111111000',
+                                           '00011111111000',
+                                           '00000001111000',
+                                           '11111111110011',
+                                           '11100011111111',
+                                           '11100011111111'
+                                           ]])
     ]
+
+    # code_practice()
 
     for p in problems:
         p.run()
