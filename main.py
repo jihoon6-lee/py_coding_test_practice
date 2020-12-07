@@ -3,6 +3,7 @@ import copy
 from abc import *
 import math
 
+
 class IProblemSolving(metaclass=ABCMeta):
     input_data_list: List[List[Any]]
 
@@ -210,6 +211,38 @@ class Problem_3_DFS_BFS_FrozenBeverage(IProblemSolving):
         return ice_count
 
 
+class Problem_4_DFS_BFS_EscapeMaze(IProblemSolving):
+    def solve(self, input_data: List[Any]):
+        n, m = input_data[0]
+        maze = []
+        for row in range(n):
+            maze.append(list(map(int, input_data[1+row])))
+        # 1은 갈 수 있음. 0은 갈 수 없음.
+        # 움직여야 하는 최소 칸 수. BFS.
+        # 최초 위치 0,0, 탈출구는 n-1, m-1
+        from collections import deque
+        queue = deque()
+        queue.append((0, 0, 0))
+
+        def get_min_move(q: deque) -> int:
+            r, c, moves = q.popleft()
+            if r == n-1 and c == m-1:
+                return moves
+            if r + 1 < n and maze[r+1][c] == 1:
+                q.append((r+1, c, moves+1))
+            elif r - 1 >= 0 and maze[r-1][c] == 1:
+                q.append((r-1, c, moves+1))
+            elif c + 1 < m and maze[r][c+1] == 1:
+                q.append((r, c + 1, moves + 1))
+            elif c - 1 >= 0 and maze[r][c-1] == 1:
+                q.append((r, c - 1, moves + 1))
+            return get_min_move(q)
+        r = get_min_move(queue)
+        return r
+
+        pass
+
+
 def code_practice():
     s = [3,5,7,9,11,13]
     print(s[1::2])
@@ -232,23 +265,24 @@ if __name__ == '__main__':
         # ProblemExample_4_2_Time([[5]]),
         # Problem_2_RoyalNight([['a1']]),
         # Problem_3_GameDevelopment([[[4,4], [1,1,0], [1,1,1,1], [1,0,0,1], [1,1,0,1], [1,1,1,1]]]),
-        Problem_3_DFS_BFS_FrozenBeverage([[[15, 14],
-                                           '00000111100000',
-                                           '11111101111110',
-                                           '11011101101110',
-                                           '11011101100000',
-                                           '11011111111111',
-                                           '11011111111100',
-                                           '11000000011111',
-                                           '01111111111111',
-                                           '00000000011111',
-                                           '01111111111000',
-                                           '00011111111000',
-                                           '00000001111000',
-                                           '11111111110011',
-                                           '11100011111111',
-                                           '11100011111111'
-                                           ]])
+        # Problem_3_DFS_BFS_FrozenBeverage([[[15, 14],
+        #                                    '00000111100000',
+        #                                    '11111101111110',
+        #                                    '11011101101110',
+        #                                    '11011101100000',
+        #                                    '11011111111111',
+        #                                    '11011111111100',
+        #                                    '11000000011111',
+        #                                    '01111111111111',
+        #                                    '00000000011111',
+        #                                    '01111111111000',
+        #                                    '00011111111000',
+        #                                    '00000001111000',
+        #                                    '11111111110011',
+        #                                    '11100011111111',
+        #                                    '11100011111111'
+        #                                    ]]),
+        Problem_4_DFS_BFS_EscapeMaze([[[5, 6], '101010', '111111', '000001', '111111', '111111']])
     ]
 
     # code_practice()
