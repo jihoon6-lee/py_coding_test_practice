@@ -243,6 +243,76 @@ class Problem_4_DFS_BFS_EscapeMaze(IProblemSolving):
         pass
 
 
+class Problem_Test_Sort_ComparingInsertionAndQuickSortWhenAlmostSorted(IProblemSolving):
+    def solve(self, input_data: List[Any]):
+        # input_data는 따로 사용하지 않는다.
+        rarely_shuffled: List[int] = []
+        elements: int = 1000000
+        shuffle_probabilities: List[float] = [0.5, 0.3, 0.1, 0.01, 0.001, 0.0001, 0.00001, 0.000001] # 10000, 1000, 100, 10
+
+        def make_rare_shuffled_array(elements_cnt: int, shuffle_probability: float) -> List[int]:
+            ascend_arr: List[int] = [i for i in range(elements_cnt)]
+            r: List[int] = []
+            for i in ascend_arr:
+                import random
+                if random.random() < shuffle_probability:
+                    pass
+                    rarely_shuffled.insert(random.randint(0, len(rarely_shuffled)), i)
+                else:
+                    rarely_shuffled.append(i)
+            return r
+
+        # insertion sort
+        def insertion_sort(arr: List[int]) -> List[int]:
+            for i in range(1, len(arr)):
+                for j in range(i, 0, -1):   # i부터 1까지 -1씩 감소
+                    if arr[j] < arr[j-1]:   # 한칸씩 왼쪽으로 이동
+                        arr[j], arr[j-1] = arr[j-1], arr[j]     # swap
+                    else:   # 이미 정렬되어 있는 배열을 만나면 그 위치에서 멈춤
+                        break
+            return arr
+
+        # quick sort
+        def quick_sort(arr: List[int], start: int, end: int) -> List[int]:
+            if start >= end:    # 원소가 한 개면 종료
+                return arr
+            pivot = start   # pivot은 첫 번째 원소
+            left = start + 1
+            right = end
+            while left <= right:
+                # pivot보다 큰 데이터 찾을 때까지 반복
+                while left <= end and arr[left] <= arr[pivot]:
+                    left += 1
+                # pivot보다 작은 데이터 찾을 떄까지 반복
+                while right > start and arr[right] >= arr[pivot]:
+                    right += 1
+                if left > right:    # 엇갈렸다면 작은 데이터와 피벗을 교체
+                    arr[right], arr[pivot] = arr[pivot], arr[right]
+                else:   # 엇갈리지 않았다면 작은 데이터와 큰 데이터를 교체
+                    arr[left], arr[right] = arr[right], arr[left]
+            # 분할 이후 왼쪽과 오른쪽에 각각 정렬 수행
+            arr = quick_sort(arr, start, right - 1)
+            arr = quick_sort(arr, right+1, end)
+            return arr
+
+        import time
+        import copy
+        for sp in shuffle_probabilities:
+            print(f'processing el: {elements} sp: {sp}')
+            to_be_sorted: List[int] = make_rare_shuffled_array(elements, sp)
+            arr_a = copy.copy(to_be_sorted)
+            arr_b = copy.copy(to_be_sorted)
+            start_a = time.time()
+            insertion_sort(arr_a)
+            end_a = time.time()
+            start_b = time.time()
+            quick_sort(arr_b, 0, len(arr_b))
+            end_b = time.time()
+            winner = 'insertion' if (end_b-start_b) > (end_a-start_a) else 'quick'
+            print(f'elements: {elements} probability: {sp} insertion: {end_a-start_a:.6f}s '
+                  f'quick: {end_b-start_b:.6f}s winner: {winner}')
+
+
 def code_practice():
     s = [3,5,7,9,11,13]
     print(s[1::2])
@@ -282,7 +352,8 @@ if __name__ == '__main__':
         #                                    '11100011111111',
         #                                    '11100011111111'
         #                                    ]]),
-        Problem_4_DFS_BFS_EscapeMaze([[[5, 6], '101010', '111111', '000001', '111111', '111111']])
+        # Problem_4_DFS_BFS_EscapeMaze([[[5, 6], '101010', '111111', '000001', '111111', '111111']])
+        Problem_Test_Sort_ComparingInsertionAndQuickSortWhenAlmostSorted([[]])
     ]
 
     # code_practice()
